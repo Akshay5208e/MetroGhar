@@ -14,6 +14,7 @@ import Login from './frontend/pages/login/Login';
 import Homepage from './frontend/pages/homepage/Homepage';
 import SearchResultPage from './frontend/pages/searchResultPage.js/SearchResultPage';
 import PropertyInfo from './frontend/pages/propertyInfo/PropertyInfo';
+import { LocalitySearchProvider, LocationSearchContext, LocationSearchProvider } from './frontend/context/LocationContext';
 
 
 
@@ -29,14 +30,16 @@ function App() {
   return (
       <div className='App'>
         <Switch>
-        
+          <LocationSearchProvider>
+          {/* <LocalitySearchProvider> */}
         <Route exact path = "/" component={Homepage}/>
         <Route exact path = "/login" component={Login}/>
         <Route exact path = "/signup" component={Signup}/>
 
         <Route exact path = "/search" component={SearchResultPage}/>
         <Route exact path = "/search/:documentID" component={PropertyInfo}/>
-        
+        {/* </LocalitySearchProvider> */}
+        </LocationSearchProvider>
         </Switch>
       </div>
 

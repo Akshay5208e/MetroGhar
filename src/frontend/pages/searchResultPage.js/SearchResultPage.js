@@ -1,8 +1,9 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { firestore } from '../../../backend/firebase/utils';
+import { LocationSearchContext } from '../../context/LocationContext';
 import { allconstructionStatus, allspaceType, MaxBudget, MaxCoveredArea, MinBudget, MinCoveredArea, OwnerOptions, typeOptions } from './filterData';
 
 
@@ -18,6 +19,8 @@ function SearchResultPage() {
  const history= useHistory();
   
  const [allProperties, setallProperties] = useState([]);
+
+ 
  useEffect(()=>{  
    getDataformDatabase()
   
@@ -25,7 +28,7 @@ function SearchResultPage() {
 
 
 
-
+const {searchTerm,setSearchTerm,update} = useContext(LocationSearchContext)
 
  
  async function getDataformDatabase(){
@@ -56,10 +59,29 @@ function SearchResultPage() {
 
 
 
- 
+
 
 // const [filteredProperties, setfilteredProperties] = useState([])
 
+useEffect(() => {
+  const filterValuesData = window.sessionStorage.getItem("filter Values")
+  const data = JSON.parse(filterValuesData)
+  console.log("data",data)
+  setLocation(data.location)
+   setlocality(data.locality)
+   setminBudget(parseFloat(data.minBudget))
+   setMaxBudget(parseFloat(data.maxBudget))
+   
+
+   setminCoveredArea(parseFloat(data.minCoveredArea))
+   setmaxCoveredArea(parseFloat(data.maxCoveredArea))
+   setconstructionStatus(data.constructionStatus)
+   setpropertyType(data.propertyType)
+   setreraPropertyNo(data.reraPropertyNo)
+   setspaceType(data.spaceType)
+   setpostedBy(data.postedBy)
+   setpropertyType(data.propertyType)
+ }, [])
 
  const [location, setLocation] = useState('')
  const [locality, setlocality] = useState('')
@@ -74,9 +96,12 @@ function SearchResultPage() {
  const [reraRegisteredProperty, setreraRegisteredProperty] = useState('')
  const [reraPropertyNo, setreraPropertyNo] = useState('')
  
-
+ 
 
  const searchProperties = allProperties.filter(result=>{return result.propertyApproval===true})
+
+
+
 const filteredProperties = searchProperties
                                         .filter(result=>{return result.location.toLowerCase().includes(location.toLowerCase())})
                                         // .filter(result=>{return result.locality.toLowerCase().includes(locality.toLowerCase())})
@@ -91,7 +116,9 @@ const filteredProperties = searchProperties
                                         .filter(result=>{ if (result.price<=maxBudget) return result })
                                         .filter(result=>{  if (result.size<=maxCoveredArea) return result})
                                       
-            
+            console.log('SERACH',searchProperties)
+            console.log('fol',filteredProperties)
+            console.log('all',allProperties)
                                         
   const handleReset=()=>{
     setLocation('')
@@ -108,25 +135,7 @@ const filteredProperties = searchProperties
     setpropertyType('')
   }
  
-  useEffect(() => {
-   const filterValuesData = window.sessionStorage.getItem("filter Values")
-   const data = JSON.parse(filterValuesData)
-   console.log("data",data)
-   setLocation(data.location)
-    setlocality(data.locality)
-    setminBudget(parseFloat(data.minBudget))
-    setMaxBudget(parseFloat(data.maxBudget))
-    
 
-    setminCoveredArea(parseFloat(data.minCoveredArea))
-    setmaxCoveredArea(parseFloat(data.maxCoveredArea))
-    setconstructionStatus(data.constructionStatus)
-    setpropertyType(data.propertyType)
-    setreraPropertyNo(data.reraPropertyNo)
-    setspaceType(data.spaceType)
-    setpostedBy(data.postedBy)
-    setpropertyType(data.propertyType)
-  }, [])
   
   useEffect(() => {
     const filterValuestoBeSaved = {
@@ -134,6 +143,8 @@ const filteredProperties = searchProperties
     }
     window.sessionStorage.setItem("filter Values",JSON.stringify(filterValuestoBeSaved))
   })
+
+  
   
 
   return (
