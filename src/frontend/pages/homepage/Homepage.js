@@ -58,7 +58,7 @@ function Homepage() {
         
         {state}
         {/* {state==='Location' ? <input type ='text' value={searchTerm} onChange={getLocationSearch}/>: <input onChange={getLocalitySearch}/>} */}
-        {state==='Location' ? <input type ='text' value={location} onChange={e=>setLocation(e.target.value)}/>: <input type ='text' value={location} onChange={e=>setlocality(e.target.value)}/>}
+        {state==='Location' ? <input type ='text' value={location} onChange={e=>setLocation(e.target.value)}/>: <input type ='text' value={locality} onChange={e=>setlocality(e.target.value)}/>}
         
         
         <button onClick={()=>history.push('/search')}>Search</button>
