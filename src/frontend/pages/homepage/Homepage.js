@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOutUserStart } from '../../../backend/redux/User/user.actions';
+
 const mapState = (state) => ({
   currentUser: state.user.currentUser
 });
