@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { firestore } from '../../../backend/firebase/utils';
 import { LocationSearchContext } from '../../context/LocationContext';
-import { allconstructionStatus, allspaceType, MaxBudget, MaxCoveredArea, MinBudget, MinCoveredArea, OwnerOptions, typeOptions } from './filterData';
+import { allconstructionStatus, allspaceType, LocationOptions, MaxBudget, MaxCoveredArea, MinBudget, MinCoveredArea, OwnerOptions, typeOptions } from './filterData';
 
 
 
@@ -156,7 +156,13 @@ const filteredProperties = searchProperties
         
         <div>
           Location
-          <input type='text' value ={location} onChange={e=>setLocation(e.target.value)}/>
+          {LocationOptions.map((option, index) => {
+            const { value, name } = option;
+  
+            return (
+              <option key={index} value={value}>{name}</option>
+            );
+          })}
         </div>
         <div>
           Locality

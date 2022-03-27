@@ -13,8 +13,8 @@ export const typeOptions=[{
   }]
 
   export const LocationOptions=[{
-    value: "location1",
-    name: "location1"
+    value: "",
+    name: "Location"
   }, {
     value: "2",
     name: "2"

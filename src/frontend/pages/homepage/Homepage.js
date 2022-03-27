@@ -3,6 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signOutUserStart } from '../../../backend/redux/User/user.actions';
 import { LocationSearchContext } from '../../context/LocationContext';
+import { LocationOptions } from '../searchResultPage.js/filterData';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
+
 
 const mapState = (state) => ({
   currentUser: state.user.currentUser
@@ -44,22 +50,73 @@ function Homepage() {
     window.sessionStorage.setItem("filter Values",JSON.stringify(filterValuestoBeSaved))
   })
 
+  const handleChange=(e)=>{
+    setlocality(e.target.value)
+  }
+
+  const handleSelect= async value =>{
+    const result  = await geocodeByAddress(value);
+    setlocality(result)
+  }
+   
   return (
       <div>
           Homepage
         {currentUser&&
         <button onClick={() => signOut()}>Signout</button>}
 
-        <select onChange={e=>setState(e.target.value)}>
+        <select onChange={e=>setLocation(e.target.value)}>
+        {LocationOptions.map((option, index) => {
+            const { value, name } = option;
+  
+            return (
+              <option key={index} value={value}>{name}</option>
+            );
+          })}
           
-          <option value='Location'>Location</option>
-          <option value='Locality'>Locality</option>
         </select>
         
-        {state}
+     
         {/* {state==='Location' ? <input type ='text' value={searchTerm} onChange={getLocationSearch}/>: <input onChange={getLocalitySearch}/>} */}
-        {state==='Location' ? <input type ='text' value={location} onChange={e=>setLocation(e.target.value)}/>: <input type ='text' value={locality} onChange={e=>setlocality(e.target.value)}/>}
-        
+      {locality}
+        <PlacesAutocomplete
+        value={locality}
+        onChange={setlocality}
+        onSelect={handleSelect}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div>
+            <input
+              {...getInputProps({
+                placeholder: 'Search Places ...',
+                className: 'location-search-input',
+              })}
+            />
+            <div className="autocomplete-dropdown-container">
+              {loading && <div>Loading...</div>}
+              {suggestions.map(suggestion => {
+                const className = suggestion.active
+                  ? 'suggestion-item--active'
+                  : 'suggestion-item';
+                // inline style for demonstration purpose
+                const style = suggestion.active
+                  ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                  : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                return (
+                  <div
+                    {...getSuggestionItemProps(suggestion, {
+                      className,
+                      style,
+                    })}
+                  >
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </PlacesAutocomplete>
         
         <button onClick={()=>history.push('/search')}>Search</button>
       
